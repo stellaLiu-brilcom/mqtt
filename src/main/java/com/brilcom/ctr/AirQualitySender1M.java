@@ -91,5 +91,87 @@ public class AirQualitySender1M extends HttpServlet {
 		
 		
 	}
+	
+	
+	
+	public static void main(String[] args) {
+
+		PreparedStatement pstmt = null;
+		Connection con = null;
+		try {
+			con = DBConn.getConnection();
+
+			StringBuffer sb = new StringBuffer();
+			sb.append(
+					"insert ignore into airqualityData(serialNum, ip, selectDate, pm25, pm10, temperature, humid, co2, tvoc, latitude, longitude, timezone) ");
+			sb.append("SELECT ");
+			sb.append("serialNum, ");
+			sb.append("ANY_VALUE(ip) AS ip, ");
+			sb.append("LEFT(DATE_FORMAT(selectDate, '%Y%m%d%H%i00'),15) AS `selectDate`, ");
+			sb.append("ROUND(AVG(pm25),1) AS pm25, ");
+			sb.append("ROUND(AVG(pm10),1) AS pm10, ");
+			sb.append("ROUND(AVG(temperature),1) AS temperature, ");
+			sb.append("ROUND(AVG(humid),1) AS humid, ");
+			sb.append("ROUND(AVG(co2),1) AS co2, ");
+			sb.append("ROUND(AVG(tvoc),1) AS tvoc, ");
+			sb.append("ANY_VALUE(latitude) AS latitude, ");
+			sb.append("ANY_VALUE(longitude) AS longitude, ");
+			sb.append("ANY_VALUE(timezone) AS timezone ");
+			sb.append("FROM airquality a ");
+			sb.append("WHERE 1 = 1 ");
+			sb.append("and selectDate > ? ");
+			sb.append("and selectDate <= ? ");
+			sb.append(
+					"GROUP BY serialNum, HOUR(`selectDate`), FLOOR(MINUTE(`selectDate`)/1)");
+
+			String sql = sb.toString();
+
+			pstmt = con.prepareStatement(sql);
+			System.out.println(sql);
+
+			pstmt.setString(1, "2022091500%");
+			pstmt.setString(2, "2022091501%");
+
+			SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
+			Date time = new Date();
+			
+			String time1 = format1.format(time);
+			
+			
+
+			System.out.println(time1);
+			int cnt = pstmt.executeUpdate();
+			Date time2 = new Date();
+			
+			String ntime2 = format1.format(time2);
+			System.out.println("UpdateCnt TIme: " + "+" + ntime2);
+
+			if (cnt == 1) {
+				System.out.println("insert into~");
+				System.out.println(time2);
+			}
+			System.out.println(time2);
+		} catch (Exception e) {
+			
+			System.out.println(e.getMessage());
+		} finally {
+			if (pstmt != null)
+				try {
+					pstmt.close();
+					pstmt = null;
+				} catch (SQLException ex) {
+				}
+			;
+			if (con != null)
+				try {
+					con.close();
+				} catch (SQLException e) {
+				}
+			;
+		}
+
+	}
+	
+	
 
 }
