@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+<Resource 
+	name="mqtt/mysql"
+	auth="Container"
+	type="javax.sql.DataSource"
+	driverClassName="com.mysql.cj.jdbc.Driver"
+	url="jdbc:mysql://database-mqtt.cbr4uubmqr4e.ap-northeast-2.rds.amazonaws.com:3306/mqttairconditioner?characterEncoding=UTF-8&amp;serverTimezone=UTC"
+	username="picohome" password="admin4mqtt" maxActive="20" maxIdle="10" maxWait="-1"/>
+ </Context> 
