@@ -9,8 +9,7 @@ public class MqttCallback implements org.eclipse.paho.client.mqttv3.MqttCallback
 
 	DisneyLogger cat = new DisneyLogger(DisneyLogger.class.getName());
 	int count;
-	int size = 30;
-	//int size = 5;
+	int size = 60;
 	String arr[] = new String[size];
 
 	HomeProxy proxy;
